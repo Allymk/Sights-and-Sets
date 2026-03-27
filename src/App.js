@@ -5,10 +5,10 @@ import L from 'leaflet';
 import markerImg from './assets/marker.png';
 
 const customIcon = L.icon({
-  iconUrl: markerImg,      // the image you imported
-  iconSize: [40, 40],      // size of the icon
-  iconAnchor: [20, 40],    // point that represents the marker's location
-  popupAnchor: [0, -40]    // where popups appear relative to the icon
+  iconUrl: markerImg,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40]
 });
 
 function App() {
