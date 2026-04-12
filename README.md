@@ -103,11 +103,11 @@ docker run --name sights-and-sets \
   -p 5432:5432 \
   -d postgres
 
-## Change Directory to SQL folder
+### Change Directory to SQL folder
 
 cd backend/app/src/main
 
-## Execute Docker Container
+### Execute Docker Container
 
 docker exec -i sights-and-sets-postgres psql -U postgres < [filename.sql]
 
