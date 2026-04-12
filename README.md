@@ -68,3 +68,40 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+## Backend - running SQL
+
+### Windows command to set up Docker:
+
+docker run --name sightsAndSets `
+
+   -e POSTGRES_PASSWORD=postgres `
+   
+   -p 5432:5432 `
+   
+   -v C:\Users\allym\OneDrive\Desktop\Sights-and-Sets\backend\app\src\main\sql:/sql `
+   
+   -d postgres
+
+### If Docker Container already exists:
+
+docker rm -f sightsAndSets
+
+### Get into Postgres
+
+docker exec -it sightsAndSets psql -U postgres
+
+### Running SQL Files
+
+\i /sql/movies.sql
+
+## Backend - Running Gradle (Java)
+
+### Build (only do this once)
+
+./gradlew build
+
+### Run
+
+./gradlew run
