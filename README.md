@@ -98,9 +98,7 @@ docker exec -it sightsAndSets psql -U postgres
 
 ### MAC command to set up Docker:
 
-docker run --name sightsAndSets `
-
- docker run --name sightsAndSets \
+docker run --name sights-and-sets \
   -e POSTGRES_PASSWORD=postgres \
   -p 5432:5432 \
   -d postgres
@@ -111,7 +109,7 @@ cd backend/app/src/main
 
 ## Execute Docker Container
 
-docker exec -i sight-sets-postgres psql -U postgres < [filename.sql]
+docker exec -i sights-and-sets-postgres psql -U postgres < [filename.sql]
 
 ## Backend - Running Gradle (Java)
 
