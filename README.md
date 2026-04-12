@@ -102,6 +102,6 @@ docker exec -it sightsAndSets psql -U postgres
 
 ./gradlew build
 
-## Run
+### Run
 
 ./gradlew run
