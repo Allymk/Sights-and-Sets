@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import markerImg from './assets/marker.png';
+import TextField from "@mui/material/TextField";
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import "./App.css";
 
 const customIcon = L.icon({
   iconUrl: markerImg,
@@ -12,6 +15,15 @@ const customIcon = L.icon({
 });
 
 function App() {
+  const [searchType, setSearchType] = useState('');
+  //const [searchText, setSearchText] = useState('');
+
+  // const handleSearch = () => {
+  //   if (!searchType) return;
+  //   console.log('search type:', searchType);
+  //   console.log('search text:', searchText);
+  // };
+
   return (
     <div style={{ height: '100vh', width: '100%' }}>
       <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: '100%', width: '100%' }}>
@@ -23,7 +35,30 @@ function App() {
         <Popup>Custom marker!</Popup>
       </Marker>
       </MapContainer>
-    </div>
+
+      <div className="search-container">
+        <FormControl fullWidth required sx={{ mb: 2 }}>
+          <InputLabel id="search-type-label">Search By</InputLabel>
+          <Select
+            labelId="search-type-label"
+            id="search-type"
+            value={searchType}
+            label="Search By"
+            onChange={(e) => setSearchType(e.target.value)}
+          >
+            <MenuItem value="movie">Movie</MenuItem>
+            <MenuItem value="location">Location</MenuItem>
+          </Select>
+        </FormControl>
+        
+        <TextField
+          id="outlined-basic"
+          variant="outlined"
+          fullWidth
+          label="Search"
+        />
+      </div>
+    </div>    
   );
 }
 
