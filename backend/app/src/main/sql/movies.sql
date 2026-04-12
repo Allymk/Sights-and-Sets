@@ -2,13 +2,14 @@ DROP SCHEMA IF EXISTS sightsAndSets CASCADE;
 CREATE SCHEMA sightsAndSets;
 SET SCHEMA 'sightsAndSets';
 
-DROP TABLE IF EXISTS COFFEE CASCADE;
+DROP TABLE IF EXISTS MOVIES CASCADE;
 
-
-CREATE TABLE COFFEE
+CREATE TABLE MOVIES 
 (
-    coffeeID integer PRIMARY KEY,
-    name varchar(50),
-    intensity integer,
-    price numeric(5,2)
+    id SERIAL PRIMARY KEY,
+    filmTitle VARCHAR(255) NOT NULL,
+    latitude VARCHAR(50),
+    longitude VARCHAR(50),
+    city VARCHAR(100),
+    country VARCHAR(100)
 );
