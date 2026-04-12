@@ -1,6 +1,7 @@
 DROP SCHEMA IF EXISTS sightsAndSets CASCADE;
 CREATE SCHEMA sightsAndSets;
-SET SCHEMA 'sightsAndSets';
+
+SET search_path = sightsAndSets;
 
 DROP TABLE IF EXISTS MOVIES CASCADE;
 
