@@ -106,7 +106,7 @@ cd backend/app/src/main
 
 ### Execute Docker Container
 
-docker exec -i sights-and-sets-postgres psql -U postgres < [filename.sql]
+docker exec -i sights-and-sets psql -U postgres < [filename.sql]
 
 ## Backend - Running Gradle (Java)
 
