@@ -45,23 +45,63 @@ function App() {
   }, []);
 
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
+    <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
+
+      {/* MAP */}
       <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-         <Marker position={[51.505, -0.09]} icon={customIcon}>
-        <Popup>Custom marker!</Popup>
-      </Marker>
+
+        {/* Example marker */}
+        {/* <Marker
+          position={[51.505, -0.09]}
+          icon={customIcon}
+          eventHandlers={{
+            click: () => setSelectedFilm({
+              title: "Example Movie",
+              location: "London"
+            })
+          }}
+        >
+          <Popup>Click me</Popup>
+        </Marker> */}
+        {films.map((film) => {
+          if (!film.latitude || !film.longitude) return null;
+
+          return (
+            <Marker
+              key={film.id}
+              position={[
+                Number(film.latitude),
+                Number(film.longitude)
+              ]}
+              icon={customIcon}
+              eventHandlers={{
+                click: () => setSelectedFilm(film)
+              }}
+            >
+              <Popup>{film.filmTitle}</Popup>
+            </Marker>
+          );
+        })}
+
       </MapContainer>
 
+      {/* SIDEBAR */}
+      {selectedFilm && (
+        <div className="sidebar">
+          <button onClick={() => setSelectedFilm(null)}>Close</button>
+          <h2>{selectedFilm.filmTitle}</h2>
+          <p>{selectedFilm.city}, {selectedFilm.country}</p>
+        </div>
+      )}
+
+      {/* SEARCH UI */}
       <div className="search-container">
         <FormControl fullWidth required sx={{ mb: 2 }}>
-          <InputLabel id="search-type-label">Search By</InputLabel>
+          <InputLabel>Search By</InputLabel>
           <Select
-            labelId="search-type-label"
-            id="search-type"
             value={searchType}
             label="Search By"
             onChange={(e) => setSearchType(e.target.value)}
@@ -83,9 +123,9 @@ function App() {
         Search
       </Button>
       </div>
-    </div>    
+
+    </div>
   );
 }
 
 export default App;
-
