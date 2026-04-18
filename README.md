@@ -116,4 +116,4 @@ docker exec -i sights-and-sets psql -U postgres < [filename.sql]
 
 ### Run
 
-./gradlew run
+./gradlew bootrun
