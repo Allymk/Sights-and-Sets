@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Tooltip, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip, Popup, useMap,  } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import markerImg from './assets/marker.png';
@@ -19,6 +19,7 @@ function App() {
   const [searchText, setSearchText] = useState('');
   const [selectedFilm, setSelectedFilm] = useState(null);
   const [films, setFilms] = useState([]);
+  const [searchResult, setSearchResult] = useState(null);
 
   const handleSearch = async () => {
   if (!searchText) {
@@ -39,6 +40,7 @@ function App() {
 
     const data = await res.json();
     console.log("Results:", data);
+    setSearchResult(data);
 
     // later: store in state and show markers
     } catch (err) {
@@ -53,6 +55,7 @@ function App() {
 
     const data = await res.json();
     console.log("Results:", data);
+    setSearchResult(data);
 
     // later: store in state and show markers
     } catch (err) {
@@ -61,6 +64,22 @@ function App() {
   }
   
 };
+
+function FlyToFilm({ film }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (film && film.latitude && film.longitude) {
+      map.flyTo(
+        [Number(film.latitude), Number(film.longitude)],
+        13, // zoom level
+        { duration: 1.5 }
+      );
+    }
+  }, [film, map]);
+
+  return null;
+}
 
  useEffect(() => {
     fetch("http://localhost:8080/movies")
@@ -80,6 +99,7 @@ function App() {
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <FlyToFilm film={searchResult} />
 
         {/* Example marker */}
         {/* <Marker
