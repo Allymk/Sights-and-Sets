@@ -22,9 +22,9 @@ public class Movie {
     return id;
 }
 
-public void setId(Long id) {
-    this.id = id;
-}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     // Getter and Setter for filmTitle
     public String getfilmTitle() {
