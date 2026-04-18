@@ -10,7 +10,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "filmTitle")
     private String filmTitle;
     private String latitude;
     private String longitude;
