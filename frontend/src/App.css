@@ -43,6 +43,24 @@
   border-radius: 8px;
 }
 
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 100vh;
+  background: white;
+  box-shadow: -3px 0 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+
+  padding: 20px;
+  overflow-y: auto;
+
+  /* animation */
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

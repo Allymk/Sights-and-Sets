@@ -110,14 +110,14 @@ function App() {
               }}
             >
               <Tooltip>{film.filmTitle}</Tooltip>
-              <Popup>
+              {/* <Popup>
                 <div>
                   <h3>Movie Title</h3>
                   <p>Release Year: 2000</p>
                   <p>Location:</p>
                   <p>Description</p>
                 </div>
-              </Popup>
+              </Popup> */}
             </Marker>
           );
         })}
