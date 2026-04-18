@@ -17,6 +17,8 @@ const customIcon = L.icon({
 function App() {
   const [searchType, setSearchType] = useState('');
   const [searchText, setSearchText] = useState('');
+  const [selectedFilm, setSelectedFilm] = useState(null);
+  const [films, setFilms] = useState([]);
 
   const handleSearch = async () => {
   if (!searchText) return;
@@ -40,6 +42,7 @@ function App() {
       .then(res => res.json())
       .then(data => {
         console.log("Movies from backend:", data);
+        setFilms(data);
       })
       .catch(err => console.error("Error fetching movies:", err));
   }, []);
