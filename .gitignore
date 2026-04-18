@@ -19,7 +19,7 @@ pnpm-debug.log*
 .gradle/
 build/
 out/
-bin/
+
 
 # Keep Gradle wrapper (IMPORTANT)
 !gradle/wrapper/gradle-wrapper.jar
