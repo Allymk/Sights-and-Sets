@@ -102,7 +102,7 @@ docker run --name sights-and-sets -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d 
 
 ### Change Directory to SQL folder
 
-cd backend/app/src/main
+cd backend/app/src/main/sql
 
 ### Execute Docker Container
 
