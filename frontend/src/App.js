@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import markerImg from './images/marker.png';
 import TextField from "@mui/material/TextField";
 import {
   FormControl,
@@ -20,6 +19,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./App.css";
+
+const markerImg = "/images/marker.png";
 
 const theme = createTheme({
   typography: {
@@ -44,15 +45,12 @@ const customIcon = L.icon({
   popupAnchor: [0, -40]
 });
 
-/* FlyTo Component */
 function FlyToLocation({ position }) {
   const map = useMap();
 
   useEffect(() => {
     if (position) {
-      map.flyTo(position, 10, {
-        duration: 1.5
-      });
+      map.flyTo(position, 10, { duration: 1.5 });
     }
   }, [position, map]);
 
@@ -65,7 +63,26 @@ function App() {
   const [selectedFilm, setSelectedFilm] = useState(null);
   const [films, setFilms] = useState([]);
   const [mapPosition, setMapPosition] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null); // ✅ NEW
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const fetchAllMovies = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/movies");
+      const data = await res.json();
+      setFilms(data);
+    } catch (err) {
+      console.error("Error fetching movies:", err);
+    }
+  };
+
+  const handleReset = async () => {
+    await fetchAllMovies();
+    setSearchText("");
+    setSearchType("");
+    setSelectedFilm(null);
+    setErrorMessage(null);
+    setMapPosition([40.4535, -79.9742]);
+  };
 
   const handleSearch = async () => {
     if (!searchText || !searchType) {
@@ -84,7 +101,6 @@ function App() {
 
       const results = Array.isArray(data) ? data : (data ? [data] : []);
 
-      // ❌ No results
       if (results.length === 0) {
         setErrorMessage("No results found.");
         setFilms([]);
@@ -92,13 +108,10 @@ function App() {
         return;
       }
 
-      // ✅ Clear error if success
       setErrorMessage(null);
-
       setFilms(results);
       setSelectedFilm(null);
 
-      // Fly to first result
       if (results[0].latitude && results[0].longitude) {
         setMapPosition([
           Number(results[0].latitude),
@@ -113,18 +126,20 @@ function App() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:8080/movies")
-      .then(res => res.json())
-      .then(data => setFilms(data))
-      .catch(err => console.error("Error fetching movies:", err));
+    fetchAllMovies();
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
 
-        {/* MAP */}
-        <MapContainer center={[51.505, -0.09]} zoom={3} style={{ height: '100%', width: '100%' }}>
+        <MapContainer
+          center={[51.505, -0.09]}
+          zoom={3}
+          minZoom={3}
+          maxZoom={18}
+          style={{ height: '100%', width: '100%' }}
+        >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
           {mapPosition && <FlyToLocation position={mapPosition} />}
@@ -160,6 +175,7 @@ function App() {
                         ...film,
                         info
                       });
+                      console.log(info);
 
                     } catch (err) {
                       console.error("Error fetching movie info:", err);
@@ -174,7 +190,6 @@ function App() {
           })}
         </MapContainer>
 
-        {/* SIDEBAR */}
         {selectedFilm && (
           <Card
             sx={{
@@ -203,11 +218,14 @@ function App() {
             {selectedFilm.info?.imageUrl && (
               <CardMedia
                 component="img"
-                height="220"
-                image={selectedFilm.info.imageUrl}
+                image={`/images/${selectedFilm.info.imageUrl}`}
                 alt={selectedFilm.filmTitle}
-                sx={{ borderRadius: 2 }}
-              />
+                sx={{
+                width: "100%",
+                height: 350,
+                objectFit: "cover"
+              }}
+            />
             )}
 
             <CardContent>
@@ -252,14 +270,13 @@ function App() {
           </Card>
         )}
 
-        {/* SEARCH UI */}
         <div
           style={{
             position: "absolute",
             top: 20,
             left: "50%",
             transform: "translateX(-50%)",
-            width: 500,
+            width: 520,
             zIndex: 1000
           }}
         >
@@ -272,14 +289,13 @@ function App() {
               backgroundColor: "rgba(255,255,255,0.9)"
             }}
           >
-            {/* ✅ Error Message */}
             {errorMessage && (
               <Alert severity="error" sx={{ mb: 2 }}>
                 {errorMessage}
               </Alert>
             )}
 
-            <div style={{ display: "flex", gap: 12 }}>
+            <div style={{ display: "flex", gap: 10 }}>
               <FormControl sx={{ minWidth: 140 }}>
                 <InputLabel>Type</InputLabel>
                 <Select
@@ -306,13 +322,17 @@ function App() {
               <Button
                 variant="contained"
                 onClick={handleSearch}
-                sx={{
-                  px: 3,
-                  borderRadius: 2,
-                  fontWeight: 600
-                }}
+                sx={{ px: 3, borderRadius: 2, fontWeight: 600 }}
               >
                 Search
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={handleReset}
+                sx={{ borderRadius: 2 }}
+              >
+                Show All
               </Button>
             </div>
           </Card>
