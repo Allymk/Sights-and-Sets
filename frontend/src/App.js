@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import markerImg from './assets/marker.png';
@@ -84,7 +84,15 @@ function App() {
                 click: () => setSelectedFilm(film)
               }}
             >
-              <Popup>{film.filmTitle}</Popup>
+              <Tooltip>{film.filmTitle}</Tooltip>
+              <Popup>
+                <div>
+                  <h3>Movie Title</h3>
+                  <p>Release Year: 2000</p>
+                  <p>Location:</p>
+                  <p>Description</p>
+                </div>
+              </Popup>
             </Marker>
           );
         })}
