@@ -20,8 +20,10 @@ function App() {
   const [selectedFilm, setSelectedFilm] = useState(null);
   const [films, setFilms] = useState([]);
   const [searchResult, setSearchResult] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSearch = async () => {
+    setErrorMessage(null);
   if (!searchText) {
     console.log("ENTER SOME TEXT");
     return;
@@ -40,7 +42,13 @@ function App() {
 
     const data = await res.json();
     console.log("Results:", data);
-    setSearchResult(data);
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+    setErrorMessage("No movie found in database.");
+    setSearchResult(null);
+    return;
+  }
+  setSearchResult(Array.isArray(data) ? data[0] : data);
+    //setSearchResult(data);
 
     // later: store in state and show markers
     } catch (err) {
@@ -55,7 +63,13 @@ function App() {
 
     const data = await res.json();
     console.log("Results:", data);
-    setSearchResult(data);
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+    setErrorMessage("No movie found in database.");
+    setSearchResult(null);
+    return;
+    }
+    setSearchResult(Array.isArray(data) ? data[0] : data);
+    //setSearchResult(data);
 
     // later: store in state and show markers
     } catch (err) {
@@ -143,6 +157,13 @@ function FlyToFilm({ film }) {
         })}
 
       </MapContainer>
+
+      {errorMessage && (
+        <div className="error-popup">
+          {errorMessage}
+          <button onClick={() => setErrorMessage(null)}>X</button>
+        </div>
+      )}
 
       {/* SIDEBAR */}
       {selectedFilm && (
