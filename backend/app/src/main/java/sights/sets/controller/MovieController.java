@@ -5,6 +5,7 @@ import sights.sets.entity.Movie;
 import sights.sets.repository.MovieRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/movies")
@@ -20,6 +21,11 @@ public class MovieController {
     @GetMapping
     public List<Movie> getAll() {
         return repo.findAll();
+    }
+
+    @GetMapping("/search")
+    public Optional<Movie> findByTitle(@RequestParam String filmTitle) {
+        return repo.findMovieByTitle(filmTitle);
     }
 
     @PostMapping

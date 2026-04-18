@@ -3,8 +3,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import markerImg from './assets/marker.png';
-// import TextField from "@mui/material/TextField";
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import TextField from "@mui/material/TextField";
+import { FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
 import "./App.css";
 
 const customIcon = L.icon({
@@ -16,13 +16,24 @@ const customIcon = L.icon({
 
 function App() {
   const [searchType, setSearchType] = useState('');
-  //const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState('');
 
-  // const handleSearch = () => {
-  //   if (!searchType) return;
-  //   console.log('search type:', searchType);
-  //   console.log('search text:', searchText);
-  // };
+  const handleSearch = async () => {
+  if (!searchText) return;
+
+  try {
+    const res = await fetch(
+      `http://localhost:8080/movies/search?filmTitle=${encodeURIComponent(searchText)}`
+    );
+
+    const data = await res.json();
+    console.log("Results:", data);
+
+    // later: store in state and show markers
+  } catch (err) {
+    console.error("Error fetching movies:", err);
+  }
+};
 
  useEffect(() => {
     fetch("http://localhost:8080/movies")
@@ -60,12 +71,17 @@ function App() {
           </Select>
         </FormControl>
         
-        {/* <TextField
+        <TextField
           id="outlined-basic"
           variant="outlined"
           fullWidth
           label="Search"
-        /> */}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <Button variant="contained" onClick={handleSearch}>
+        Search
+      </Button>
       </div>
     </div>    
   );
