@@ -98,10 +98,7 @@ docker exec -it sightsAndSets psql -U postgres
 
 ### MAC command to set up Docker:
 
-docker run --name sights-and-sets \
-  -e POSTGRES_PASSWORD=postgres \
-  -p 5432:5432 \
-  -d postgres
+docker run --name sights-and-sets -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
 
 ### Change Directory to SQL folder
 
