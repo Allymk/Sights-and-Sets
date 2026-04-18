@@ -30,7 +30,7 @@ VALUES (DEFAULT, 'The Dark Knight Rises', '40.44616911986952', '-79.951146803649
 (DEFAULT, 'Jurassic Park', '22.0886', '-159.3390', 'Kauai', 'USA'), 
 (DEFAULT, 'Star Wars: Episode IV: A New Hope', '33.542499789637006','9.9670393612651','Matmatat-Al-Qadimal', 'Tunisia'), 
 (DEFAULT, 'Skyfall', '56.56652692733995', '-5.048631731419528', 'Glen Etive', 'United Kingdom'), 
-(DEFAULT, 'Gladiator', '30.9189', '-6.8930', 'Ouarzazate, Morocco'), 
+(DEFAULT, 'Gladiator', '30.9189', '-6.8930', 'Ouarzazate', 'Morocco'), 
 (DEFAULT, 'Pirates of the Caribbean: The Curse of the Black Pearl', '13.246578468139605', '-61.2713038254717', 'Keartons', 'St. Vincent & Grenadines'), 
 (DEFAULT, 'The Twilight Saga: New Moon', '49.369613480225745', '-123.29266293595487', 'West Vancouver', 'Canada'), 
 (DEFAULT, 'Juno', '49.24361767990788', '-123.19538287392287', 'Vancouver', 'Canada'), 
