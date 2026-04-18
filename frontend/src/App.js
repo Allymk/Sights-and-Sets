@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip, Popup, useMap,  } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import markerImg from './assets/marker.png';
@@ -17,51 +17,168 @@ const customIcon = L.icon({
 function App() {
   const [searchType, setSearchType] = useState('');
   const [searchText, setSearchText] = useState('');
+  const [selectedFilm, setSelectedFilm] = useState(null);
+  const [films, setFilms] = useState([]);
+  const [searchResult, setSearchResult] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSearch = async () => {
-  if (!searchText) return;
+    setErrorMessage(null);
+  if (!searchText) {
+    console.log("ENTER SOME TEXT");
+    return;
+  }
+  if (!searchType) {
+    console.log("ENTER A TYPE");
+    return;
+  }
+    
 
-  try {
+  if(searchType === "movie") {
+    try {
     const res = await fetch(
-      `http://localhost:8080/movies/search?filmTitle=${encodeURIComponent(searchText)}`
+      `http://localhost:8080/movies/searchById?filmTitle=${encodeURIComponent(searchText)}`
     );
 
     const data = await res.json();
     console.log("Results:", data);
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+    setErrorMessage("No movie found in database.");
+    setSearchResult(null);
+    return;
+  }
+  setSearchResult(Array.isArray(data) ? data[0] : data);
+    //setSearchResult(data);
 
     // later: store in state and show markers
-  } catch (err) {
-    console.error("Error fetching movies:", err);
+    } catch (err) {
+      console.error("Error fetching movies:", err);
+    }
+  } else {
+    console.log("searching by location");
+    try {
+    const res = await fetch(
+      `http://localhost:8080/movies/searchByLocation?location=${encodeURIComponent(searchText)}`
+    );
+
+    const data = await res.json();
+    console.log("Results:", data);
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+    setErrorMessage("No movie found in database.");
+    setSearchResult(null);
+    return;
+    }
+    setSearchResult(Array.isArray(data) ? data[0] : data);
+    //setSearchResult(data);
+
+    // later: store in state and show markers
+    } catch (err) {
+      console.error("Error fetching movies:", err);
+    }
   }
+  
 };
+
+function FlyToFilm({ film }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (film && film.latitude && film.longitude) {
+      map.flyTo(
+        [Number(film.latitude), Number(film.longitude)],
+        13, // zoom level
+        { duration: 1.5 }
+      );
+    }
+  }, [film, map]);
+
+  return null;
+}
 
  useEffect(() => {
     fetch("http://localhost:8080/movies")
       .then(res => res.json())
       .then(data => {
         console.log("Movies from backend:", data);
+        setFilms(data);
       })
       .catch(err => console.error("Error fetching movies:", err));
   }, []);
 
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
+    <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
+
+      {/* MAP */}
       <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-         <Marker position={[51.505, -0.09]} icon={customIcon}>
-        <Popup>Custom marker!</Popup>
-      </Marker>
+        <FlyToFilm film={searchResult} />
+
+        {/* Example marker */}
+        {/* <Marker
+          position={[51.505, -0.09]}
+          icon={customIcon}
+          eventHandlers={{
+            click: () => setSelectedFilm({
+              title: "Example Movie",
+              location: "London"
+            })
+          }}
+        >
+          <Popup>Click me</Popup>
+        </Marker> */}
+        {films.map((film) => {
+          if (!film.latitude || !film.longitude) return null;
+
+          return (
+            <Marker
+              key={film.id}
+              position={[
+                Number(film.latitude),
+                Number(film.longitude)
+              ]}
+              icon={customIcon}
+              eventHandlers={{
+                click: () => setSelectedFilm(film)
+              }}
+            >
+              <Tooltip>{film.filmTitle}</Tooltip>
+              {/* <Popup>
+                <div>
+                  <h3>Movie Title</h3>
+                  <p>Release Year: 2000</p>
+                  <p>Location:</p>
+                  <p>Description</p>
+                </div>
+              </Popup> */}
+            </Marker>
+          );
+        })}
+
       </MapContainer>
 
+      {errorMessage && (
+        <div className="error-popup">
+          {errorMessage}
+          <button onClick={() => setErrorMessage(null)}>X</button>
+        </div>
+      )}
+
+      {/* SIDEBAR */}
+      {selectedFilm && (
+        <div className="sidebar">
+          <button onClick={() => setSelectedFilm(null)}>Close</button>
+          <h2>{selectedFilm.filmTitle}</h2>
+          <p>{selectedFilm.city}, {selectedFilm.country}</p>
+        </div>
+      )}
+
+      {/* SEARCH UI */}
       <div className="search-container">
         <FormControl fullWidth required sx={{ mb: 2 }}>
-          <InputLabel id="search-type-label">Search By</InputLabel>
+          <InputLabel>Search By</InputLabel>
           <Select
-            labelId="search-type-label"
-            id="search-type"
             value={searchType}
             label="Search By"
             onChange={(e) => setSearchType(e.target.value)}
@@ -83,9 +200,9 @@ function App() {
         Search
       </Button>
       </div>
-    </div>    
+
+    </div>
   );
 }
 
 export default App;
-

@@ -23,9 +23,14 @@ public class MovieController {
         return repo.findAll();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/searchById")
     public Optional<Movie> findByTitle(@RequestParam String filmTitle) {
         return repo.findMovieByTitle(filmTitle);
+    }
+
+    @GetMapping("/searchByLocation")
+    public List<Movie> findByLocation(@RequestParam String location) {
+        return repo.findMoviesByCityOrCountry(location);
     }
 
     @PostMapping
