@@ -21,20 +21,45 @@ function App() {
   const [films, setFilms] = useState([]);
 
   const handleSearch = async () => {
-  if (!searchText) return;
+  if (!searchText) {
+    console.log("ENTER SOME TEXT");
+    return;
+  }
+  if (!searchType) {
+    console.log("ENTER A TYPE");
+    return;
+  }
+    
 
-  try {
+  if(searchType === "movie") {
+    try {
     const res = await fetch(
-      `http://localhost:8080/movies/search?filmTitle=${encodeURIComponent(searchText)}`
+      `http://localhost:8080/movies/searchById?filmTitle=${encodeURIComponent(searchText)}`
     );
 
     const data = await res.json();
     console.log("Results:", data);
 
     // later: store in state and show markers
-  } catch (err) {
-    console.error("Error fetching movies:", err);
+    } catch (err) {
+      console.error("Error fetching movies:", err);
+    }
+  } else {
+    console.log("searching by location");
+    try {
+    const res = await fetch(
+      `http://localhost:8080/movies/searchByLocation?location=${encodeURIComponent(searchText)}`
+    );
+
+    const data = await res.json();
+    console.log("Results:", data);
+
+    // later: store in state and show markers
+    } catch (err) {
+      console.error("Error fetching movies:", err);
+    }
   }
+  
 };
 
  useEffect(() => {
