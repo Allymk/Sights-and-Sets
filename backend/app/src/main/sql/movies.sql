@@ -38,7 +38,7 @@ VALUES (DEFAULT, 'The Dark Knight Rises', '40.44616911986952', '-79.951146803649
 (DEFAULT, 'The Avengers', '40.84239883527834', '-79.61560673197472', 'Worthington', 'United States of America'), 
 (DEFAULT, 'The Perks of Being A Wallflower', '40.437389495059705', '-80.01437214096043', 'Pittsburgh', 'United States of America'), 
 (DEFAULT, 'Adventureland', '40.451639484634114', '-79.99092503574697', 'Pittsburgh', 'United States of America'), 
-(DEFAULT, 'Transformers: Revenge of the Fallen', '40.60665465727727', '-75.37853896530378', 'Pittsburgh', 'United States of America'), 
+(DEFAULT, 'Transformers: Revenge of the Fallen', '40.60665465727727', '-75.37853896530378', 'Allentown', 'United States of America'), 
 (DEFAULT, 'Rocky', '39.96476375650955', '-75.17979217248724', 'Philadelphia', 'United States of America'), 
 (DEFAULT, 'The Lord of the Rings: The Fellowship of the Ring', '-37.8720', '175.6829', 'Matamata', 'New Zealand'), 
 (DEFAULT, 'Harry Potter and the Sorcerers Stone', '51.7503', '-1.2540', 'Oxford', 'United Kingdom'), 

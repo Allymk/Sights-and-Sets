@@ -57,6 +57,45 @@ function FlyToLocation({ position }) {
   return null;
 }
 
+function FitToFilms({ films, trigger }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!films) return;
+
+    const validCoords = films
+      .filter(f => f.latitude && f.longitude)
+      .map(f => [Number(f.latitude), Number(f.longitude)]);
+
+    if (validCoords.length === 0) {
+      map.flyToBounds(
+        [
+          [-90, -180],
+          [90, 180]
+        ],
+        {
+          duration: 1.5,
+          padding: [50, 50]
+        }
+      );
+      return;
+    }
+
+    if (validCoords.length === 1) {
+      map.flyTo(validCoords[0], 10, { duration: 1.5 });
+      return;
+    }
+
+    map.flyToBounds(validCoords, {
+      duration: 1.5,
+      padding: [50, 50]
+    });
+
+  }, [films, trigger, map]);
+
+  return null;
+}
+
 function App() {
   const [searchType, setSearchType] = useState('');
   const [searchText, setSearchText] = useState('');
@@ -64,6 +103,7 @@ function App() {
   const [films, setFilms] = useState([]);
   const [mapPosition, setMapPosition] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [resetTrigger, setResetTrigger] = useState(0);
 
   const fetchAllMovies = async () => {
     try {
@@ -81,7 +121,9 @@ function App() {
     setSearchType("");
     setSelectedFilm(null);
     setErrorMessage(null);
-    setMapPosition([40.4535, -79.9742]);
+
+    setMapPosition(null);
+    setResetTrigger(prev => prev + 1);
   };
 
   const handleSearch = async () => {
@@ -133,16 +175,18 @@ function App() {
     <ThemeProvider theme={theme}>
       <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
 
-        <MapContainer
-          center={[51.505, -0.09]}
-          zoom={3}
-          minZoom={3}
+       <MapContainer
+          center={[20, 0]}
+          zoom={2}
+          minZoom={2}
           maxZoom={18}
           style={{ height: '100%', width: '100%' }}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
           {mapPosition && <FlyToLocation position={mapPosition} />}
+
+          <FitToFilms films={films} trigger={resetTrigger} />
 
           {Array.isArray(films) && films.map((film) => {
             if (!film.latitude || !film.longitude) return null;
@@ -175,7 +219,6 @@ function App() {
                         ...film,
                         info
                       });
-                      console.log(info);
 
                     } catch (err) {
                       console.error("Error fetching movie info:", err);
@@ -221,11 +264,11 @@ function App() {
                 image={`/images/${selectedFilm.info.imageUrl}`}
                 alt={selectedFilm.filmTitle}
                 sx={{
-                width: "100%",
-                height: 350,
-                objectFit: "cover"
-              }}
-            />
+                  width: "100%",
+                  height: 350,
+                  objectFit: "cover"
+                }}
+              />
             )}
 
             <CardContent>
